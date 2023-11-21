@@ -11,4 +11,6 @@ with open(nom_fichier, "r") as f:
     lines = f.readlines()
     for line in lines:
         print(line)
-        print("yeah")
+
+
+print("Noms des présidents :", noms_presidents)
