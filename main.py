@@ -11,4 +11,9 @@ with open(nom_fichier, "r") as f:
     lines = f.readlines()
     for line in lines:
         print(line)
-        print("yeah")
+
+nom_du_dossier = directory
+waitingroom = extraire_noms_presidents(nom_du_dossier)
+print(extraire_noms_presidents(nom_du_dossier))
+print(associationnom(waitingroom))
+
