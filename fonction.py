@@ -1,10 +1,13 @@
 import os
-directory='C:\Users\lcard\PycharmProjects\pychatbot-lemarrec-cardoso-pp\speeches'
-directory2= 'C:\Users\lcard\PycharmProjects\pychatbot-lemarrec-cardoso-pp\cleaned'
+import math
+import string
 
-def list_of_files(directory, extension):
+speeches_dir =  './speeches'
+cleaned_dir = './cleaned'
+
+def list_of_files(speeches_dir, extension):
     files_names = []
-    for filename in os.listdir(directory):
+    for filename in os.listdir(speeches_dir):
         if filename.endswith(extension):
             files_names.append(filename)
     return files_names
@@ -41,13 +44,34 @@ def associationnom(noms_presidents):
         elif noms_presidents[i] == 'Giscard dEstaing':
             noms_presidents[i] = 'Valéry Giscard dEstaing'
     return (noms_presidents)
-def minuscules(directory,directory2):
-    for filename in os.listdir(directory):
-        with open(directory+'/'+ filename,"r") as f1, open(directory2 + '/' + filename + '2', "x") as f2:
+def cleaned (speeches_dir,cleaned_dir, files):
+    for filename in files:
+        lowered_file = cleaned_dir + '/' + filename.split(".")[0] + "-cleaned.txt"
+        with open(speeches_dir + '/' + filename, "r",encoding='utf-8') as f1, open(lowered_file, "w",encoding='utf-8') as f2:
+            punct = "-.#?|':!(),;:=+`"
+            res = ""
             for lettre in f1.read():
-                if ord(lettre)>64 and ord(lettre)<91:
-                    lettre=chr(ord(lettre)+32)
-                f2.write(lettre)
+                if ord(lettre)>64 and  ord(lettre) < 91:
+                    lettre = chr(ord(lettre) + 32)
+                if (lettre in punct) or (lettre == '"'):
+                    lettre = " "
+                res += lettre
+            f2.write(res)
+
+def tf(filename, dir_src):
+    with open(dir_src + '/' + filename, "r",encoding='utf-8') as f1:
+        content = f1.read()
+        words = content.split(" ")
+        word_count = {}
+        for word in words:
+            if word not in word_count:
+                word_count[word] = 1
+            elif word in word_count:
+                word_count[word] += 1
+
+    return word_count
+
+
 
 
 
