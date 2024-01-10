@@ -1,5 +1,5 @@
 import os
-
+import math
 speeches_dir =  './speeches'
 cleaned_dir = './cleaned'
 
@@ -51,7 +51,7 @@ def associationnom(noms_presidents):
 def cleaned (speeches_dir,cleaned_dir, files):
     for filename in files:
         lowered_file = cleaned_dir + '/' + filename.split(".")[0] + "-cleaned.txt"
-        with open(speeches_dir + '/' + filename, "r") as f1, open(lowered_file, "w") as f2:
+        with open(speeches_dir + '/' + filename, "r",encoding='utf-8') as f1, open(lowered_file, "w",encoding='utf-8') as f2:
             punct = "-_.#?\|':!(),;:=+`"
             res = ""
             for lettre in f1.read():
@@ -61,3 +61,35 @@ def cleaned (speeches_dir,cleaned_dir, files):
                     lettre = " "
                 res += lettre
             f2.write(res)
+def tf(filename, dir_src):
+    with open(dir_src + '/' + filename, "r",encoding='utf-8') as f1:
+        content = f1.read()
+        words = content.split(" ")
+        word_count = {}
+        for word in words:
+            if word not in word_count:
+                word_count[word] = 1
+            elif word in word_count:
+                word_count[word] += 1
+
+    return word_count
+
+def idf(term, files_names, dir_src):
+    term= set(tf(files_names, cleaned_dir))
+    n_doc = len(files_names)
+    n = 0
+    for filename in files_names:
+        with open(dir_src + '/' + filename, "r", encoding='utf-8') as f1:
+            content = f1.read()
+            words = content.split(" ")
+            if term in words:
+                n += 1
+        return math.log10(n_doc/n)
+def tf_idf(filename, files_names, dir_src):
+    tf_scores = tf(filename, dir_src)
+    idf_scores = idf(set(tf_scores.keys()), files_names, dir_src)
+    # Calcule du score TF-IDF pour chaque terme dans les docs
+    tf_idf_scores = {}
+    for term, tf_score in tf_scores.items():
+        tf_idf_scores[term] = tf_score * idf_scores[term]
+    return tf_idf_scores
